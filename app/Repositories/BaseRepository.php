@@ -1,0 +1,55 @@
+<?php 
+
+namespace App\Repositories;
+
+use App\Repositories\RepositoryInterface;
+
+abstract class BaseRepository implements RepositoryInterface
+{
+	protected $model;
+
+	public function __construct(){
+		$this->setModel();
+	}
+
+	abstract public function getModel();
+
+	public function setModel(){
+		$this->model = app()->make($this->getModel());
+	}
+
+	public function all(){
+		return $this->model->all();
+	}
+
+	public function first(){
+		return $this->model->first();
+	}
+	public function find($id){
+		return $this->model->find($id);
+	}
+
+	public function create($attributes = []){
+		return $this->model->create($attributes);
+	}
+
+	public function update($id, $attributes = []){
+		$result = $this->find($id);
+
+		if($result){
+			return $result->update($attributes);
+		}
+
+		return false;
+	}
+
+	public function delete($id){
+		$result = $this->find($id);
+
+		if($result){
+			return $result->delete();
+		}
+
+		return false;
+	}
+}
